@@ -1,12 +1,16 @@
-package com.lagou.model03.work;
+package com.lagou.model04.work.work01;
+
+import com.lagou.model04.work.work01.StudentsManage;
 
 import java.util.Scanner;
 
-public class Work04 {
+public class StudentManageTest {
     public static void main(String[] args) {
         System.out.println("欢迎来到学生系统");
         boolean is_quit = false;
         Scanner sc = new Scanner(System.in);
+        StudentsManage sm = new StudentsManage();
+        sm.loadData();
         while (is_quit == false){
             System.out.println("请选择操作 1增加学生，2删除学生，3修改学生，4查找学生，5遍历学生， 0退出系统");
             int action = sc.nextInt();
@@ -18,26 +22,34 @@ public class Work04 {
                 int age = sc.nextInt();
                 String name = sc.next();
 
-                StudentManage.addStudent(id, age, name);
+                try {
+                    sm.addStudent(id, age, name);
+                } catch (AgeExecption ageExecption) {
+                    ageExecption.printStackTrace();
+                } catch (IdExecption idExecption) {
+                    idExecption.printStackTrace();
+                }
             } else if (action == 2){
                 System.out.println("请输入删除学生的学号");
                 int id = sc.nextInt();
-                StudentManage.removeStudent(id);
+                sm.removeStudent(id);
             } else if (action == 3){
                 System.out.println("请输入修改学生的学号，年龄，姓名");
                 int id = sc.nextInt();
                 int age = sc.nextInt();
                 String name = sc.next();
-                StudentManage.updateStudent(id, age, name);
+                sm.updateStudent(id, age, name);
             } else if (action == 4){
                 System.out.println("请输入要查找学生的学号");
                 int id = sc.nextInt();
-                StudentManage.getStudent(id);
+                sm.getStudent(id);
             } else if (action == 5){
-                StudentManage.iterStudent();
+                sm.iterStudent();
             }
 
         }
+        sm.saveData();
+
         System.out.println("成功退出学生系统");
     }
 }
