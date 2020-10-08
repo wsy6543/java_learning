@@ -26,8 +26,8 @@
 
                     for (var i=2; i < data.length; i+=2){
                         var dx = data[i] / 1000;
-                        var dy = data[i] / 1000;
-                        var x = px + py;
+                        var dy = data[i + 1] / 1000;
+                        var x = px + dx;
                         var y = py + dy;
                         res.push([x, y]);
                         px = x;
