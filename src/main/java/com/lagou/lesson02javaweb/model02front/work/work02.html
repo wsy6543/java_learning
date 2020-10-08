@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./echarts.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./china.js"></script>
+</head>
+<body>
+    <div id="map" style="min-width:450px; height: 650px"></div>
+    <script>
+        var myChart = echarts.init(document.getElementById('map'));
+        myChart.showLoading();
+        $.ajax({
+            url: "weibo.json",
+            type: "get",
+            async: true,
+            success: function(weiboData){
+                myChart.hideLoading();
+                Data = function(index){
+                    data = weiboData[index];
+                    var px = data[0]/ 1000;
+                    var py = data[1]/ 1000;
+                    var res = [[px, py]];
+
+                    for (var i=2; i < data.length; i+=2){
+                        var dx = data[i] / 1000;
+                        var dy = data[i] / 1000;
+                        var x = px + py;
+                        var y = py + dy;
+                        res.push([x, y]);
+                        px = x;
+                        py = y;
+                    }
+                    return res
+
+                };
+                myChart.setOption({
+                    backgroupColor: "#404a59",
+                    title: {
+                        text: "微博签到数据点亮中国",
+                        subtext: "from ThinkGIS",
+                        left: "center",
+                        top: "top",
+                        textStyle: {color: "#fff"}
+                    },
+                    legend: {
+                        left: "left",
+                        data: ['强', '中', '弱'],
+                        textStyle: {color: '#ccc'},
+                    },
+                    geo: {
+                        name: '强',
+                        type: 'scatter',
+                        map: 'china',
+                        label: {emphasis: {show: false}},
+                        itemStyle: {normal: {areaColor:'#323c48', borderColor: '#111'}, emphasis: {areaColor: '#2a333d'}},
+
+                    },
+                    series: [{
+                        name: "弱",
+                        type: 'scatter',
+                        coordinateSystem: 'geo',
+                        symbolSize: 1,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(37, 140, 249, 0.0)',
+                                color: 'rgba(37, 140, 249, 0.8)',
+                            }
+                        },
+                        data: Data(0)
+                    },{
+                        name: "中",
+                        type: 'scatter',
+                        coordinateSystem: 'geo',
+                        symbolSize: 1,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(14, 241, 242, 0.0)',
+                                color: 'rgba(14, 241, 242, 0.8)',
+                            }
+                        },
+                        data: Data(1)
+                    },{
+                        name: "强",
+                        type: 'scatter',
+                        coordinateSystem: 'geo',
+                        symbolSize: 1,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(255, 255, 255, 0.0)',
+                                color: 'rgba(255, 255, 255, 0.8)',
+                            }
+                        },
+                        data: Data(2)
+                    }]
+                });
+
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <div v-if="books.length">
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>书籍名称</th>
+                        <th>出版日期</th>
+                        <th>价格</th>
+                        <th>购买数量</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item, index) in books">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>
+                            <button @click="down(index)" :disabled="item.count<=1">-</button>
+                            {{ item.count }}
+                            <button @click="up(index)">+</button>
+                        </td>
+                        <td>
+                            <button @click="remove(index)">移除</button>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+                <h2>总价格： {{totalPriceMethod}}</h2>
+            </div>
+            <h2 v-else>购物车为空</h2>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                books: [
+                    {id: 1, name: '<java变成思想>', date: '2020-9', price: 99.8, count: 1},
+                    {id: 2, name: '<数据分析与数据原理>', date: '2019-2', price: 39.8, count: 1},
+                    {id: 3, name: '<hadoop权威指南>', date: '2019-9', price: 59.8, count: 1},
+                    {id: 4, name: '<代码大全>', date: '2020-8', price: 128.8, count: 1}
+                ]
+            },
+            computed: {
+                totalPriceMethod(){
+                    var total_price = 0;
+                    for (var i = 0; i< this.books.length; i++){
+                        total_price += this.books[i].price * this.books[i].count;
+                    }
+                    return total_price;
+                }
+            },
+            methods: {
+                up(index){
+                    this.books[index].count++
+                },
+                down(index){
+                    this.books[index].count--
+                },
+                remove(index){
+                    this.books.splice(index, 1)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
